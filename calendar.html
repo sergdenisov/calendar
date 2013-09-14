@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+	<header>
+		<title>Календарь</title>
+		<link rel="stylesheet" type="text/css" href="css/calendar.css">
+		<!--[if gte IE 9]>
+		  <style type="text/css">
+			.gradient {
+			   filter: none;
+			}
+		  </style>
+		<![endif]-->
+		<script src="js/jquery-1.10.2.min.js"></script>
+		<script src="js/jquery.placeholder.js"></script>
+		<script src="js/jstorage.js"></script>
+		<script src="js/calendar.js"></script>
+	</header>
+	<body onload="loadPage()">
+		<div class="block_content" id="menu">
+			<div class="block_content" id="menu_items">
+				<form>
+					<div id="block_buttons">
+						<button id="button_insert" type="button" onclick="openQuickAddEventPopup()"><div>Добавить</div></button>
+						<div id="popup_quick_add_event" class="popup">
+							<img class="button_popup_cancel" src="images/glyphicons_207_remove_2_8.png" alt="Закрыть" onclick="closeQuickAddEventPopup()">
+							<input id="input_quick_add_event" type="text" placeholder="5 марта, 14:00, День рождения" title="5 марта, 14:00, День рождения">
+							<button id="button_quick_add_event" class="gradient" type="button" onclick="quickAddEvent(document.getElementById('input_quick_add_event').value)">Создать</button>
+						</div>
+						<button id="button_refresh" type="button" onclick="changeMonth(0)"><div>Обновить</div></button>
+					</div>
+					<div id="block_search">
+						<img id="image_search" src="images/glyphicons_027_search.png" alt="Поиск">
+						<input id="input_search" type="text" placeholder="Событие, дата или участник" title="Событие, дата или участник">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="block_content">
+			<div id="calendar_block">
+				<div id="menu_calendar">
+					<button id="button_previous" type="button" onclick="changeMonth(-1)">&#9668;</button>
+					<div id="current_month">
+						<input type="hidden" id='first_month_day' value=''>
+						<div id="month_name"></div>
+					</div>
+					<button id="button_next" type="button" onclick="changeMonth(+1)">&#9658;</button>
+					<button id="button_today" type="button" onclick="loadCalendar(today, true)">Сегодня</button>
+				</div>
+				<table id="table_calendar">
+					<tbody>
+					</tbody>
+				</table>					
+			</div>			
+		</div>
+			<div id="popup_add_event" class="popup">
+				<img class="button_popup_cancel" src="images/glyphicons_207_remove_2_8.png" alt="Закрыть" onclick="closeAddEventPopup()">
+				<input id="input_add_event_name" type="text" placeholder="Событие" title="Событие">
+				<input id="input_add_event_date" type="text" placeholder="День, месяц, год" title="День, месяц, год">
+				<span style="display: none;">Участники:</span>
+				<input id="input_add_event_participants" type="text" placeholder="Имена участников" title="Имена участников">
+				<span style="display: none;">Описание:</span>
+				<textarea id="input_add_event_description" placeholder="Описание" title="Описание"></textarea>
+				<button id="button_add_event" class="gradient" type="button" onclick="addOrEditEvent()">Готово</button>
+				<button id="button_delete_event" class="gradient" type="button" onclick="deleteSelectedEvent()">Удалить</button>
+			</div>
+	</body>
+</html>
