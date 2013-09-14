@@ -62,7 +62,7 @@ textarea {
 	color: #d3d3d3;
 }
 :-ms-input-placeholder {
-	color: #d3d3d3 !important;;
+	color: #d3d3d3 !important;
 }
 .placeholder {
 	color: #d3d3d3 !important;
@@ -323,42 +323,14 @@ textarea {
 }
 #input_add_event_name {
 	margin-top: 25px;
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: bold;
 }
 #input_add_event_date, #input_add_event_participants {
 	margin-top: 6px;
 }
 #input_add_event_description {
 	margin-top: 38px;
-}
-input[disabled='disabled'], textarea[disabled='disabled'] {
-	border: none;
-	border-radius: 0px;
-	box-shadow: none;
-	background: white;
-	color: black !important;
-}
-input[disabled='disabled']#input_add_event_name {
-	font-size: 16px;
-	font-weight: bold;
-}
-input[disabled='disabled']#input_add_event_participants, textarea[disabled='disabled']#input_add_event_description {
-	margin-top: 0px;
-}
-.popup>span {
-	padding-left: 8px;
-	color: #666666;
-	font-weight: bold;
-}
-.popup>span:nth-child(1) {
-	margin-top: 15px;
-}
-.popup>span:nth-child(2) {
-	margin-top: 15px;
-}
-#popup_add_event>span {
-	float: left;
-	display: block;
 }
 #button_add_event {
 	margin: 23px 0px 0px 20px;

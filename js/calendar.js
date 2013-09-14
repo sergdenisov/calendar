@@ -177,26 +177,14 @@ function fillDataToAddEventPopup(data) {
 
 	if (i != - 1) {
 		inputName.value = eventsList[i].name;
-		inputName.setAttribute('disabled', 'disabled');
 		inputDate.value = date.getDate() + ' ' + getMonthNameInGenitive(date).toLowerCase();
-		inputDate.setAttribute('disabled', 'disabled');
 		inputParticipants.value = eventsList[i].participants;
-		if (eventsList[i].participants != null) {
-			inputParticipants.setAttribute('disabled', 'disabled');
-		}
 		inputDescription.value = eventsList[i].description;
-		if (eventsList[i].description != null) {
-			inputDescription.setAttribute('disabled', 'disabled');
-		}
 	} else {
 		$('#input_add_event_name').val('');
-		inputName.removeAttribute('disabled');
 		$('#input_add_event_date').val('');
-		inputDate.removeAttribute('disabled');
 		$('#input_add_event_participants').val('');
-		inputParticipants.removeAttribute('disabled');
 		$('#input_add_event_description').val('');
-		inputDescription.removeAttribute('disabled');
 	}
 }
 
@@ -377,8 +365,10 @@ function addOrEditEvent() {
 		dayID = day.getElementsByClassName('day_id')[0],
 		date = new Date(Date.parse(dayID.value)),
 		i = findEventByDate(date),
-		eventNameValue = document.getElementById('input_add_event_name').value.replace(/(^\s+|\s+$)/g, ''),
-		eventDateValue = getDateFromString(document.getElementById('input_add_event_date').value),
+		eventName = document.getElementById('input_add_event_name'),
+		eventNameValue = eventName.value.replace(/(^\s+|\s+$)/g, ''),
+		eventDate = document.getElementById('input_add_event_date'),
+		eventDateValue = getDateFromString(eventDate.value),
 		eventParticipants = document.getElementById('input_add_event_participants'),
 		eventParticipantsValue = eventParticipants.value.replace(/(^\s+|\s+$)/g, ''),
 		eventDescription = document.getElementById('input_add_event_description'),
@@ -389,26 +379,30 @@ function addOrEditEvent() {
 		return;
 	}
 	
-	if (isHasEvent) {
-		if (i != -1 
-		&& (eventParticipants.getAttribute('disabled') != 'disabled' || eventParticipants.getAttribute('disabled') != 'disabled') 
-		&& confirm('Сохранить изменения?')) {
-			if (eventParticipants.getAttribute('disabled') != 'disabled') {
-				eventsList[i].participants = eventParticipantsValue;		
+	var j = findEventByDate(eventDateValue);
+	break1 : if (isHasEvent) {
+		if (i != -1 && confirm('Сохранить изменения?')) {
+			if (j != -1 && i != j) {
+				break break1;
 			}
-			if (eventDescription.getAttribute('disabled') != 'disabled') {
-				eventsList[i].description = eventDescriptionValue;		
-			}
+			eventsList[i].name = eventNameValue;		
+			eventsList[i].date = eventDateValue;	
+			eventsList[i].participants = eventParticipantsValue;		
+			eventsList[i].description = eventDescriptionValue;
+			sortEventsList();
 			loadCalendar(new Date(eventDateValue.getFullYear(), eventDateValue.getMonth(), 1), false);
 			setSelectedDayByDate(eventDateValue, false);
 			closeAddEventPopup();
 		} else {
 			closeAddEventPopup();
 		}
-	} else {
-		var j = findEventByDate(eventDateValue);
+	} 
+	if (!isHasEvent || (j != -1 && i != j)) {	
 		if (j != -1) {
 			if (confirm('На заданную дату уже создано событие (' + eventsList[j].name + '), заменить его?')) {
+				if (i != -1) {
+					deleteEvent(i);
+				}
 				deleteEvent(j);
 				j = -1;
 			}		
