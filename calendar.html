@@ -1,5 +1,8 @@
 ﻿<!DOCTYPE html>
+<!--[if IE 9 ]> <html class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
 <html>
+<!--<![endif]-->
 	<header>
 		<title>Календарь</title>
 		<link rel="stylesheet" type="text/css" href="css/calendar.css">
@@ -11,6 +14,7 @@
 		  </style>
 		<![endif]-->
 		<script src="js/jquery-1.10.2.min.js"></script>
+		<script src="js/jquery.json-2.4.min.js"></script>
 		<script src="js/jquery.placeholder.js"></script>
 		<script src="js/jstorage.js"></script>
 		<script src="js/calendar.js"></script>
@@ -31,6 +35,9 @@
 					<div id="block_search">
 						<img id="image_search" src="images/glyphicons_027_search.png" alt="Поиск">
 						<input id="input_search" type="text" placeholder="Событие, дата или участник" title="Событие, дата или участник">
+						<div id="popup_search" class="popup" style="display: none;">
+							<div id="block_content_popup_search"></div>
+						</div>
 					</div>
 				</form>
 			</div>

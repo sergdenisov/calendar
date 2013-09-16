@@ -2,7 +2,7 @@
 html, body {
 	height: 100%;
 }
-html, body, div, form, input, textarea, button, table, tbody, tr, td {
+html, body, div, form, input, textarea, button, table, tbody, tr, td, hr {
 	margin: 0;
 	padding: 0;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -10,7 +10,7 @@ html, body, div, form, input, textarea, button, table, tbody, tr, td {
 	-moz-box-sizing: border-box;
 	font-size: 12px;
 }
-html, body, div, input, textarea, button {
+html, body, div, input, textarea, button, hr {
 	border: 0;
 }
 *:focus {
@@ -54,18 +54,23 @@ textarea {
 }
 ::-webkit-input-placeholder {
 	color: #d3d3d3;
+	opacity: 1;
 }
 :-moz-placeholder {
 	color: #d3d3d3;
+	opacity: 1;
 }
 ::-moz-placeholder {
 	color: #d3d3d3;
+	opacity: 1;
 }
 :-ms-input-placeholder {
 	color: #d3d3d3 !important;
+	opacity: 1;
 }
 .placeholder {
 	color: #d3d3d3 !important;
+	opacity: 1;
 }
 
 /* Главное меню */
@@ -83,7 +88,7 @@ textarea {
 	height: 27px;
 	width: 100%;
 	margin-top: 55px;
-	z-index: 1;
+	z-index: 3;
 }
 #block_buttons {
 	float: left;
@@ -106,6 +111,7 @@ textarea {
 }
 #block_search {
 	float: right;
+	position: relative;
 	margin-right: 50px;
 }
 #image_search {
@@ -164,7 +170,9 @@ textarea {
 }
 #table_calendar td {
 	position: relative;
+	cursor: pointer;	
 }
+
 #table_calendar td div {
 	height: 100%;
 	width: 100%;
@@ -192,6 +200,8 @@ textarea {
 .selected {
 	outline: 2px solid rgba(39, 161, 255, .5);
 	background-color: #e5f1f9;
+	position: relative;
+	z-index: 1;
 }
 .has_event {
 	background-color: #c2e4fe;
@@ -200,6 +210,7 @@ textarea {
 /* Всплывающие окна */
 .popup {
     position: absolute;
+	cursor: default;
     top: 0px;
     left: 0px;
     font-size: 13px;
@@ -211,37 +222,6 @@ textarea {
 	z-index: 5;
 	border-collapse: separate;
 }
-#popup_quick_add_event {
-    margin: 40px 50px;
-    height: 100px;
-    width: 306px;
-}
-#popup_quick_add_event:before, #popup_quick_add_event:after {
-	content: '';
-	position: absolute;
-	background: white;
-}
-#popup_quick_add_event:after {
-    width: 20px;
-	height: 10px;
-	top: 0px;
-	left: 16px;
-	z-index: 15;
-}
-#popup_quick_add_event:before {
-	width: 10px;
-	height: 10px;
-	top: -6px;
-	left: 20px;
-	border: 1px solid rgba(204, 204, 204, 1);
-	box-shadow: 0px 0px 5px rgba(169, 169, 169, 1);
-	z-index: 10;
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
 .button_popup_cancel {
 	height: 7px;
 	width: 7px;
@@ -249,11 +229,8 @@ textarea {
     cursor: pointer;
     margin: 0;
     float: right;
-    z-index: 100;
+    z-index: 25;
 	margin: 10px 10px 0px 0px;
-}
-#input_quick_add_event {
-	margin-top: 25px;
 }
 .popup>input[type=text], .popup>textarea, .popup>span {
 	float: left;
@@ -285,10 +262,46 @@ textarea {
 										 , rgba(236, 236, 236, 1) 51%, rgba(242, 242, 242, 1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2', GradientType=0);
 }
+/* Быстрое добавление */ 
+#popup_quick_add_event {
+    margin: 40px 50px;
+    height: 100px;
+    width: 306px;
+}
+#popup_quick_add_event:before, #popup_quick_add_event:after, #popup_search:before, #popup_search:after {
+	content: '';
+	position: absolute;
+	background: white;
+}
+#popup_quick_add_event:after, #popup_search:after  {
+    width: 20px;
+	height: 10px;
+	top: 0px;
+	left: 16px;
+	z-index: 15;
+}
+#popup_quick_add_event:before, #popup_search:before {
+	width: 10px;
+	height: 10px;
+	top: -6px;
+	left: 20px;
+	border: 1px solid rgba(204, 204, 204, 1);
+	box-shadow: 0px 0px 5px rgba(169, 169, 169, 1);
+	z-index: 10;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+#input_quick_add_event {
+	margin-top: 25px;
+}
 #button_quick_add_event {
 	margin: 12px 0px 0px 20px;
 	width: 60px;
 }
+/* Добавление */
 #popup_add_event {
     margin-left: 140px;
 	margin-top: -20px;
@@ -339,4 +352,59 @@ textarea {
 #button_delete_event {
 	margin: 23px 0px 0px 13px;
 	width: 60px;
+}
+/* Поиск */
+#popup_search {
+    margin: 40px 0px 0px 24px;
+    height: auto;
+    width: 200px;
+	z-index: 15;
+}
+#block_content_popup_search {
+	position: relative;
+	margin-bottom: 5px;
+	z-index: 20;
+}
+#block_content_popup_search>div:hover {
+	background-color: #27A1FF;
+}
+#block_content_popup_search>div:hover>span {
+	color: white !important;
+}
+#block_content_popup_search>span {
+	margin: 5px auto;
+	position: relative;
+	text-align: center;
+	font-size: 11px;
+	display: block;
+	color: #999999;
+}
+#block_content_popup_search>div {
+	margin: 5px 0px 0px 5px;
+	height: 39px;
+	width: 187px;
+	cursor: pointer;
+}
+#block_content_popup_search>div>span {
+	padding-top: 4px;
+	padding-left: 7px;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+}
+#block_content_popup_search>div>span:nth-child(1)  {
+	color: black;
+	font-size: 12px;
+	font-weight: bold;
+}
+#block_content_popup_search>div>span:nth-child(2)  {
+	color: #666666;
+	font-size: 11px;
+}
+hr {
+	height: 1px;
+	width: 181px;
+	margin: 5px 0px 0px 9px;
+	background-color: #ebebeb;
+
 }

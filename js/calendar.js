@@ -21,8 +21,6 @@ var now = new Date(),
 	firstLoadCalendar = true,
 	daysList,
 	eventsList = [];
-	
-window.onbeforeunload = unloadPage;
 
 // Загрузка страницы
 function loadPage() {
@@ -40,6 +38,95 @@ function unloadPage() {
 	saveDataToLocalStorage();
 }
 
+// Обработчик события для элемента поиска
+function searchInputOnInput() {
+	var popupSearch = document.getElementById('popup_search');
+	if ($(this).val() != '') {
+		clearSearchResults();
+		popupSearch.style.display = 'none';
+		popupSearch.style.display = 'block';
+		closeQuickAddEventPopup();
+		closeAddEventPopup();
+		fillSearchResults($(this).val());
+	} else {
+		popupSearch.style.display = 'none';
+		clearSearchResults();
+	}
+}
+
+// Обработчик события выбора найденного события
+function searchResultOnClick() {
+	var inputSearchDate = this.getElementsByClassName('input_search_date')[0],
+		date = new Date(Date.parse(inputSearchDate.value));
+	loadCalendar(new Date(date.getFullYear(), date.getMonth(), 1), false);
+	setSelectedDayByDate(date, false);
+	document.getElementById('popup_search').style.display = 'none';
+}
+
+// Вывести результаты поиска
+function fillSearchResults(searchString) {
+	var searchContentBlock = document.getElementById('block_content_popup_search'),
+		searchResults = [],
+		j = 0,
+		searchContentDiv,
+		hr,
+		date,
+		dateName,
+		inputSearchDate;
+	searchString = searchString.replace(/(^\s+|\s+$)/g, '').toLowerCase();
+	
+	function isSuitableDate(dateString) {
+		var eventDate = new Date(Date.parse(dateString)),
+			dateToCompare = getDateFromString(searchString);
+		if (dateToCompare != null) {	
+			if (eventDate.getDate() == dateToCompare.getDate() && eventDate.getMonth() == dateToCompare.getMonth()
+				&& (eventDate.getFullYear() == dateToCompare.getFullYear() || searchString.indexOf(dateToCompare.getFullYear()) == -1)) {
+				return true;
+			}	
+		}
+		return false;
+	}
+	
+	for (var i = 0; i < eventsList.length; i++) {
+		if (searchString == '*'
+			|| eventsList[i].name.toLowerCase().indexOf(searchString) > -1
+			|| isSuitableDate(eventsList[i].date)
+			|| (eventsList[i].participants != null && eventsList[i].participants.toLowerCase().indexOf(searchString) > -1)) {
+			searchResults[j] = eventsList[i];
+			j++;
+		}
+	}
+	if (searchResults.length > 0) {
+		for (j = 0; j < searchResults.length; j++) {
+			if (j != 0) {
+				hr = document.createElement('hr');
+				searchContentBlock.appendChild(hr);
+			}
+			searchContentDiv = document.createElement('div');
+			searchContentDiv.onclick = searchResultOnClick;
+			date = new Date(Date.parse(searchResults[j].date));
+			dateName = date.getDate() + ' ' + getMonthNameInGenitive(date).toLowerCase();
+			searchContentDiv.innerHTML = '<span>' + searchResults[j].name + '</span><span>' + dateName + '</span>';
+			inputSearchDate = document.createElement('input');
+			inputSearchDate.type = 'hidden';
+			inputSearchDate.className = 'input_search_date';
+			inputSearchDate.value = date;
+			searchContentDiv.appendChild(inputSearchDate);
+			searchContentBlock.appendChild(searchContentDiv);
+		}
+	} else {
+		searchContentBlock.innerHTML = '<span>Событий не найдено</span>';
+	}
+}
+
+// Очистить результаты поиска
+function clearSearchResults() {
+	var searchContentBlock = document.getElementById('block_content_popup_search');
+	while (searchContentBlock.firstChild) {
+		searchContentBlock.removeChild(searchContentBlock.firstChild);
+	}
+}
+
 // Загрузка календаря
 function loadCalendar(date, isPossibleToChangeSelected) {
 	var currentDate = getNearestSundayDateForMonthEnd(getMonthLastDate(date)),
@@ -51,10 +138,23 @@ function loadCalendar(date, isPossibleToChangeSelected) {
 		eventID,
 		eventInfo;
 		
+	// Закроем окна добавления и очистим строку поиска
+	closeQuickAddEventPopup();	
 	closeAddEventPopup();
-	// Если первое прочтение, создадим таблицу календаря
+	$('#input_search').val('');
+	
+	// Если первая загрузка
 	if (firstLoadCalendar) {
 		createCalendarTable();
+		// Обработчики событий
+		window.onbeforeunload = unloadPage;
+		
+		var inputSearch = document.getElementById('input_search');
+		if (document.getElementsByTagName('html')[0].className = 'ie9') {
+			inputSearch.oninput = inputSearch.onkeyup = inputSearch.onpaste = inputSearch.oncut = searchInputOnInput;
+		} else {
+			inputSearch.oninput = searchInputOnInput;
+		}
 		isNeedChangeSelected = isPossibleToChangeSelected;
 	}
 	// Меняем месяц
@@ -169,17 +269,13 @@ function fillDataToAddEventPopup(data) {
 	var day = data.getElementsByClassName('day')[0],
 		dayID = day.getElementsByClassName('day_id')[0],
 		date = new Date(Date.parse(dayID.value)),
-		i = findEventByDate(date),
-		inputName = document.getElementById('input_add_event_name'),
-		inputDate = document.getElementById('input_add_event_date'),
-		inputParticipants = document.getElementById('input_add_event_participants'),
-		inputDescription = document.getElementById('input_add_event_description');
+		i = findEventByDate(date);
 
-	if (i != - 1) {
-		inputName.value = eventsList[i].name;
-		inputDate.value = date.getDate() + ' ' + getMonthNameInGenitive(date).toLowerCase();
-		inputParticipants.value = eventsList[i].participants;
-		inputDescription.value = eventsList[i].description;
+	if (i != -1) {
+		$('#input_add_event_name').val(eventsList[i].name);
+		$('#input_add_event_date').val(date.getDate() + ' ' + getMonthNameInGenitive(date).toLowerCase());
+		$('#input_add_event_participants').val(eventsList[i].participants);
+		$('#input_add_event_description').val(eventsList[i].description); 
 	} else {
 		$('#input_add_event_name').val('');
 		$('#input_add_event_date').val('');
@@ -256,6 +352,7 @@ function setSelectedDay(thisData, isNeedPopUp) {
 			fillDataToAddEventPopup(thisData);
 			thisData.parentNode.appendChild(popup);
 		}
+		document.getElementById('popup_search').style.display = 'none';
 	}
 };
 
@@ -365,16 +462,12 @@ function addOrEditEvent() {
 		dayID = day.getElementsByClassName('day_id')[0],
 		date = new Date(Date.parse(dayID.value)),
 		i = findEventByDate(date),
-		eventName = document.getElementById('input_add_event_name'),
-		eventNameValue = eventName.value.replace(/(^\s+|\s+$)/g, ''),
-		eventDate = document.getElementById('input_add_event_date'),
-		eventDateValue = getDateFromString(eventDate.value),
-		eventParticipants = document.getElementById('input_add_event_participants'),
-		eventParticipantsValue = eventParticipants.value.replace(/(^\s+|\s+$)/g, ''),
-		eventDescription = document.getElementById('input_add_event_description'),
-		eventDescriptionValue = eventDescription.value.replace(/(^\s+|\s+$)/g, '');
+		eventNameValue = $('#input_add_event_name').val().replace(/(^\s+|\s+$)/g, ''),
+		eventDateValue = getDateFromString($('#input_add_event_date').val()),
+		eventParticipantsValue = $('#input_add_event_participants').val().replace(/(^\s+|\s+$)/g, ''),
+		eventDescriptionValue = $('#input_add_event_description').val().replace(/(^\s+|\s+$)/g, '');
 	
-	if (!isHasEvent && (eventDateValue == null || eventNameValue == null)) {
+	if (!isHasEvent && (eventNameValue == '' || eventDateValue == null)) {
 		alert('Введенные данные некорректны, повторите ввод.');
 		return;
 	}
