@@ -40,9 +40,13 @@ function unloadPage() {
 
 // Обработчик события для элемента поиска
 function searchInputOnInput() {
-	var popupSearch = document.getElementById('popup_search');
+	var popupSearch = document.getElementById('popup_search'),
+		scrollPane = $('.scroll-pane');
+	if (scrollPane.data('jsp')) {
+		scrollPane.data('jsp').destroy();
+	}
+	clearSearchResults();
 	if ($(this).val() != '') {
-		clearSearchResults();
 		popupSearch.style.display = 'none';
 		popupSearch.style.display = 'block';
 		closeQuickAddEventPopup();
@@ -50,8 +54,22 @@ function searchInputOnInput() {
 		fillSearchResults($(this).val());
 	} else {
 		popupSearch.style.display = 'none';
-		clearSearchResults();
 	}
+	
+	scrollPane = $('.scroll-pane')
+	scrollPane.jScrollPane({
+		verticalDragMinHeight: 23,
+		verticalDragMaxHeight: 23,
+		verticalGutter: 10
+	});
+
+	var jspPane = $('.jspPane');
+	if (jspPane.height() < parseInt(scrollPane.css('max-height'))) {
+		scrollPane.height(jspPane.height());
+	} else {
+		scrollPane.height(parseInt(scrollPane.css('max-height')));
+	}
+	scrollPane.data('jsp').reinitialise();
 }
 
 // Обработчик события выбора найденного события
@@ -106,7 +124,7 @@ function fillSearchResults(searchString) {
 			searchContentDiv.onclick = searchResultOnClick;
 			date = new Date(Date.parse(searchResults[j].date));
 			dateName = date.getDate() + ' ' + getMonthNameInGenitive(date).toLowerCase();
-			searchContentDiv.innerHTML = '<span>' + searchResults[j].name + '</span><span>' + dateName + '</span>';
+			searchContentDiv.innerHTML = '<span>' + searchResults[j].name + '</span><span>' + dateName + '</span><span class="gradient"></span>';
 			inputSearchDate = document.createElement('input');
 			inputSearchDate.type = 'hidden';
 			inputSearchDate.className = 'input_search_date';
@@ -147,8 +165,7 @@ function loadCalendar(date, isPossibleToChangeSelected) {
 	if (firstLoadCalendar) {
 		createCalendarTable();
 		// Обработчики событий
-		window.onbeforeunload = unloadPage;
-		
+		window.onbeforeunload = unloadPage;	
 		var inputSearch = document.getElementById('input_search');
 		if (document.getElementsByTagName('html')[0].className = 'ie9') {
 			inputSearch.oninput = inputSearch.onkeyup = inputSearch.onpaste = inputSearch.oncut = searchInputOnInput;
@@ -395,6 +412,7 @@ function getMonthNameInGenitive(date) {
 function openQuickAddEventPopup() {
     document.getElementById('popup_quick_add_event').style.display = 'block';
 	closeAddEventPopup();
+	document.getElementById('popup_search').style.display = 'none';
 }
 
 // Закрыть всплывающее окно быстрого добавления события

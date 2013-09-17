@@ -5,6 +5,8 @@
 <!--<![endif]-->
 	<header>
 		<title>Календарь</title>
+		<link rel="stylesheet" type="text/css" media="all" href="css/jquery.jscrollpane.css">
+		<link rel="stylesheet" type="text/css" media="all" href="css/jquery.jscrollpane.lozenge.css">
 		<link rel="stylesheet" type="text/css" href="css/calendar.css">
 		<!--[if gte IE 9]>
 		  <style type="text/css">
@@ -17,6 +19,8 @@
 		<script src="js/jquery.json-2.4.min.js"></script>
 		<script src="js/jquery.placeholder.js"></script>
 		<script src="js/jstorage.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
+		<script src="js/jquery.jscrollpane.min.js"></script>
 		<script src="js/calendar.js"></script>
 	</header>
 	<body onload="loadPage()">
@@ -36,7 +40,7 @@
 						<img id="image_search" src="images/glyphicons_027_search.png" alt="Поиск">
 						<input id="input_search" type="text" placeholder="Событие, дата или участник" title="Событие, дата или участник">
 						<div id="popup_search" class="popup" style="display: none;">
-							<div id="block_content_popup_search"></div>
+							<div id="block_content_popup_search" class="scroll-pane"></div>
 						</div>
 					</div>
 				</form>
