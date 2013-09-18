@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
-<!--[if IE 9 ]> <html class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
 <html>
 <!--<![endif]-->
 	<header>
@@ -11,10 +11,17 @@
 		<!--[if gte IE 9]>
 		  <style type="text/css">
 			.gradient {
-			   filter: none;
+			   filter: none !important;
 			}
 		  </style>
 		<![endif]-->
+		<!--[if !IE]><!-->
+		<script>
+			if(/*@cc_on!@*/false){ 
+				document.documentElement.className = 'ie'; 
+			}
+		</script>
+		<!--<![endif]-->
 		<script src="js/jquery-1.10.2.min.js"></script>
 		<script src="js/jquery.json-2.4.min.js"></script>
 		<script src="js/jquery.placeholder.js"></script>
@@ -28,13 +35,15 @@
 			<div class="block_content" id="menu_items">
 				<form>
 					<div id="block_buttons">
-						<button id="button_insert" type="button" onclick="openQuickAddEventPopup()"><div>Добавить</div></button>
+						<button id="button_insert" type="button" onclick="openQuickAddEventPopup()"><span>Добавить</span></button>
 						<div id="popup_quick_add_event" class="popup">
-							<img class="button_popup_cancel" src="images/glyphicons_207_remove_2_8.png" alt="Закрыть" onclick="closeQuickAddEventPopup()">
+							<div class="button_popup_cancel" alt="Закрыть" onclick="closeQuickAddEventPopup()"></div>
 							<input id="input_quick_add_event" type="text" placeholder="5 марта, 14:00, День рождения" title="5 марта, 14:00, День рождения">
-							<button id="button_quick_add_event" class="gradient" type="button" onclick="quickAddEvent(document.getElementById('input_quick_add_event').value)">Создать</button>
+							<button id="button_quick_add_event" class="gradient" type="button" onclick="quickAddEvent($('#input_quick_add_event').val())">
+								<span>Создать</span>
+							</button>
 						</div>
-						<button id="button_refresh" type="button" onclick="changeMonth(0)"><div>Обновить</div></button>
+						<button id="button_refresh" type="button" onclick="changeMonth(0)"><span>Обновить</span></button>
 					</div>
 					<div id="block_search">
 						<img id="image_search" src="images/glyphicons_027_search.png" alt="Поиск">
@@ -42,6 +51,7 @@
 						<div id="popup_search" class="popup" style="display: none;">
 							<div id="block_content_popup_search" class="scroll-pane"></div>
 						</div>
+						<div id="button_search_cancel" style="display: none;" onclick="buttonSearchCancelOnClick()"></div>
 					</div>
 				</form>
 			</div>
@@ -49,13 +59,13 @@
 		<div class="block_content">
 			<div id="calendar_block">
 				<div id="menu_calendar">
-					<button id="button_previous" type="button" onclick="changeMonth(-1)">&#9668;</button>
+					<button id="button_previous" type="button" onclick="changeMonth(-1)"><span>&#9668;</span></button>
 					<div id="current_month">
 						<input type="hidden" id='first_month_day' value=''>
 						<div id="month_name"></div>
 					</div>
-					<button id="button_next" type="button" onclick="changeMonth(+1)">&#9658;</button>
-					<button id="button_today" type="button" onclick="loadCalendar(today, true)">Сегодня</button>
+					<button id="button_next" type="button" onclick="changeMonth(+1)"><span>&#9658;</span></button>
+					<button id="button_today" type="button" onclick="loadCalendar(today, true)"><span>Сегодня</span></button>
 				</div>
 				<table id="table_calendar">
 					<tbody>
@@ -64,13 +74,13 @@
 			</div>			
 		</div>
 			<div id="popup_add_event" class="popup">
-				<img class="button_popup_cancel" src="images/glyphicons_207_remove_2_8.png" alt="Закрыть" onclick="closeAddEventPopup()">
+				<div class="button_popup_cancel" src="images/glyphicons_207_remove_2_8.png" alt="Закрыть" onclick="closeAddEventPopup()"></div>
 				<input id="input_add_event_name" type="text" placeholder="Событие" title="Событие">
 				<input id="input_add_event_date" type="text" placeholder="День, месяц, год" title="День, месяц, год">
 				<input id="input_add_event_participants" type="text" placeholder="Имена участников" title="Имена участников">
 				<textarea id="input_add_event_description" placeholder="Описание" title="Описание"></textarea>
-				<button id="button_add_event" class="gradient" type="button" onclick="addOrEditEvent()">Готово</button>
-				<button id="button_delete_event" class="gradient" type="button" onclick="deleteSelectedEvent()">Удалить</button>
+				<button id="button_add_event" class="gradient" type="button" onclick="addOrEditEvent()"><span>Готово</span></button>
+				<button id="button_delete_event" class="gradient" type="button" onclick="deleteSelectedEvent()"><span>Удалить</span></button>
 			</div>
 	</body>
 </html>

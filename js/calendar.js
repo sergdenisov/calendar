@@ -38,21 +38,35 @@ function unloadPage() {
 	saveDataToLocalStorage();
 }
 
+// Обработчик события клика мыши на крестик в поиске
+function buttonSearchCancelOnClick() {
+	var popupSearch = document.getElementById('popup_search'),
+		buttonSearchCancel = document.getElementById('button_search_cancel');
+
+	$('#input_search').val('');
+	clearSearchResults();
+	buttonSearchCancel.style.display = 'none';
+	popupSearch.style.display = 'none';
+}
+
 // Обработчик события для элемента поиска
 function searchInputOnInput() {
 	var popupSearch = document.getElementById('popup_search'),
-		scrollPane = $('.scroll-pane');
+		scrollPane = $('.scroll-pane'),
+		buttonSearchCancel = document.getElementById('button_search_cancel');
 	if (scrollPane.data('jsp')) {
 		scrollPane.data('jsp').destroy();
 	}
 	clearSearchResults();
 	if ($(this).val() != '') {
+		buttonSearchCancel.style.display = 'block';
 		popupSearch.style.display = 'none';
 		popupSearch.style.display = 'block';
 		closeQuickAddEventPopup();
 		closeAddEventPopup();
 		fillSearchResults($(this).val());
 	} else {
+		buttonSearchCancel.style.display = 'none';
 		popupSearch.style.display = 'none';
 	}
 	
@@ -167,7 +181,7 @@ function loadCalendar(date, isPossibleToChangeSelected) {
 		// Обработчики событий
 		window.onbeforeunload = unloadPage;	
 		var inputSearch = document.getElementById('input_search');
-		if (document.getElementsByTagName('html')[0].className = 'ie9') {
+		if (document.getElementsByTagName('html')[0].className == 'ie9') {
 			inputSearch.oninput = inputSearch.onkeyup = inputSearch.onpaste = inputSearch.oncut = searchInputOnInput;
 		} else {
 			inputSearch.oninput = searchInputOnInput;
